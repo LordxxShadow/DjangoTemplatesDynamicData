@@ -1,0 +1,38 @@
+
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Draft Posts</h2>
+
+    {% for post in posts %}
+        <article class="post">
+            <p class="date">
+                Created: {{ post.created_date }}
+            </p>
+
+            <h2>
+                <a href="{% url 'post_detail' pk=post.pk %}">
+                    {{ post.title }}
+                </a>
+            </h2>
+
+            <p>{{ post.text|linebreaksbr }}</p>
+
+            <a href="{% url 'post_edit' pk=post.pk %}">
+                Edit
+            </a>
+
+            <form method="POST" action="{% url 'post_publish' pk=post.pk %}">
+                {% csrf_token %}
+                <button type="submit">Publish</button>
+            </form>
+
+            <form method="POST" action="{% url 'post_remove' pk=post.pk %}">
+                {% csrf_token %}
+                <button type="submit">Delete Draft</button>
+            </form>
+        </article>
+    {% empty %}
+        <p>You don't have any draft posts yet.</p>
+    {% endfor %}
+{% endblock %}
